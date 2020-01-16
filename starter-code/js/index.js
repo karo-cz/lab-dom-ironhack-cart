@@ -46,22 +46,36 @@ $deleteButtons.forEach(function(button) {
 });
 
 function removeProduct(event) {
-  let productRow = event.target.parentNode.parentNode.parentNode;
-  document.querySelector("#cart").removeChild(productRow);
+  console.log(event.target.parentNode.parentNode);
+  let productRow = event.target.parentNode.parentNode;
+
+  document.querySelector("tbody").removeChild(productRow);
+
   calcAll();
+}
+
+let productClone = document.querySelector(".product").cloneNode(true);
+
+function newProductLine(name, price) {
+  let clone = productClone.cloneNode(true);
+
+  clone.querySelector(".name").innerText = `${name}`;
+  clone.querySelector(".pu").innerText = `$${price}`;
+
+  clone.querySelector(".btn-delete").onclick = removeProduct;
+
+  return clone;
 }
 
 function createProduct() {
   let newName = document.querySelector(".new-name input").value;
   let newPrice = document.querySelector(".new-price input").value;
-  let productRow = document.querySelector(".product");
-  let cloneProductRow = productRow.cloneNode(true);
+  let newProduct = newProductLine(newName, newPrice);
 
-  cloneProductRow.querySelector(".name").innerText = `${newName}`;
-  cloneProductRow.querySelector(".pu").innerText = `$${newPrice}`;
-
-  document.querySelector("tbody").appendChild(cloneProductRow);
-  console.log(cloneProductRow);
+  document.querySelector("tbody").appendChild(newProduct);
+  console.log(newProduct);
+  document.querySelector(".new-name input").value = "";
+  document.querySelector(".new-price input").value = "";
 }
 
 $create.onclick = createProduct;
