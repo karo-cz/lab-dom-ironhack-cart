@@ -1,11 +1,13 @@
-var $cart = document.querySelector("#cart tbody");
-var $calc = document.getElementById("calc");
+let $cart = document.querySelector("#cart tbody");
+let $calc = document.getElementById("calc");
+let $create = document.getElementById("create");
+let $deleteButtons = document.querySelectorAll(".btn-delete");
 
 function updateSubtot($product) {
   // Iteration 1.1
 
   let unitPrice = $product.querySelector(".pu").innerText;
-  let price = parseInt(
+  let price = parseFloat(
     unitPrice
       .split("")
       .slice(1)
@@ -13,7 +15,7 @@ function updateSubtot($product) {
   );
 
   let unitQty = $product.querySelector(".qty input").value;
-  let unit = parseInt(unitQty);
+  let unit = parseFloat(unitQty);
   let sub = price * unit;
 
   $product.querySelector(".subtot span").innerText = `${sub}`;
@@ -39,16 +41,27 @@ function calcAll() {
 
 $calc.onclick = calcAll;
 
-$deleteButtons = document.querySelectorAll("btn btn-delete");
+$deleteButtons.forEach(function(button) {
+  button.onclick = removeProduct;
+});
 
-function removeProduct(e) {
-  // $deleteButtons.forEach(function(button, index) {
-  let toRemove = document.querySelector(".product")[index];
-  let currentTarget = document.querySelector("#cart tbody");
-  e.currentTarget.removeChild(toRemove);
-  // });
+function removeProduct(event) {
+  let productRow = event.target.parentNode.parentNode.parentNode;
+  document.querySelector("#cart").removeChild(productRow);
+  calcAll();
 }
 
-for (let i = 0; i < $deleteButtons.length; i++) {
-  $deleteButtons[i].onclick = removeProduct(i);
+function createProduct() {
+  let newName = document.querySelector(".new-name input").value;
+  let newPrice = document.querySelector(".new-price input").value;
+  let productRow = document.querySelector(".product");
+  let cloneProductRow = productRow.cloneNode(true);
+
+  cloneProductRow.querySelector(".name").innerText = `${newName}`;
+  cloneProductRow.querySelector(".pu").innerText = `$${newPrice}`;
+
+  document.querySelector("tbody").appendChild(cloneProductRow);
+  console.log(cloneProductRow);
 }
+
+$create.onclick = createProduct;
